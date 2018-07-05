@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -19,6 +21,7 @@ public class FlashcardPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
+    private JFrame frame;
     private JTextField txtField;
     private JTextField meaningTxt;
     private JButton dictBtn;
@@ -26,10 +29,13 @@ public class FlashcardPanel extends JPanel {
     private JButton teBtn;
     private JButton kanjiBtn;
     private JButton nextBtn;
+    private JButton addBtn;
+    private JButton deleteBtn;
     private FlashcardController controller;
     private TangoModel tangoModel;
 
-    public FlashcardPanel() {
+    public FlashcardPanel(JFrame frame) {
+        this.frame = frame;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         controller = new FlashcardController(this);
@@ -109,15 +115,44 @@ public class FlashcardPanel extends JPanel {
         panel.setLayout(new FlowLayout());
         nextBtn = new JButton("Next");
         nextBtn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 loadVocabulary(controller.next());
                 txtField.setText("");
             }
-
         });
         panel.add(nextBtn);
+
+        addBtn = new JButton("Add...");
+        addBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dlg = new JDialog(frame, "Add Vocabulary");
+                dlg.setModal(true);
+                dlg.setLocationRelativeTo(null);
+                dlg.add(new TangoInput());
+                dlg.pack();
+                dlg.setVisible(true);
+                controller.updateModel();
+            }
+        });
+        panel.add(addBtn);
+
+        deleteBtn = new JButton("Delete..");
+        deleteBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog dlg = new JDialog(frame, "Delete Vocabulary");
+                dlg.setModal(true);
+                dlg.setLocationRelativeTo(null);
+                dlg.add(new DeleteTango(controller.getModel()));
+                dlg.pack();
+                dlg.setVisible(true);
+                controller.updateModel();
+            }
+        });
+        panel.add(deleteBtn);
+
         add(panel, gbc);
     }
 

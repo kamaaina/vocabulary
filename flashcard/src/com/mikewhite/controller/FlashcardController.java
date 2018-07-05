@@ -23,31 +23,46 @@ public class FlashcardController {
         this.panel = panel;
         models = new ArrayList<>();
         dbmgr = DatabaseManager.getInstance();
-        if (dbmgr.connect("localhost", "test", "test")) {
-            try {
-                ResultSet rs = dbmgr.fetch("select dictionary,masu,te,kanji,meaning from vocab");
-                while (rs.next()) {
-                    TangoModel tm = new TangoModel();
-                    tm.setDictionaryForm(rs.getString(1));
-                    tm.setMasuForm(rs.getString(2));
-                    tm.setTeForm(rs.getString(3));
-                    tm.setKanji(rs.getString(4));
-                    tm.setMeaning(rs.getString(5));
-                    models.add(tm);
-                }
-            } catch (SQLException sqle) {
-                sqle.printStackTrace();
-            }
-        } else {
+        if (!dbmgr.connect("localhost", "test", "test"))
             JOptionPane.showMessageDialog(null, "Unable to connect to database");
+        init();
+    }
+
+    private void init() {
+        models.clear();
+
+        try {
+            ResultSet rs = dbmgr.fetch("select id,dictionary,masu,te,kanji,meaning from vocab");
+            while (rs.next()) {
+                TangoModel tm = new TangoModel();
+                tm.setId(rs.getInt(1));
+                tm.setDictionaryForm(rs.getString(2));
+                tm.setMasuForm(rs.getString(3));
+                tm.setTeForm(rs.getString(4));
+                tm.setKanji(rs.getString(5));
+                tm.setMeaning(rs.getString(6));
+                models.add(tm);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         }
+
         size = models.size();
         Collections.shuffle(models);
+        index = 0;
     }
 
     public TangoModel next() {
         if (++index == size)
             index = 0;
         return models.get(index);
+    }
+
+    public List<TangoModel> getModel() {
+        return models;
+    }
+
+    public void updateModel() {
+        init();
     }
 }

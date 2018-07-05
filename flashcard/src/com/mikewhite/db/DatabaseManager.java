@@ -38,6 +38,11 @@ public class DatabaseManager {
         return stmt.executeQuery(sql);
     }
 
+    public void execute(String sql) throws SQLException {
+        System.out.println("execute: " + sql);
+        stmt.execute(sql);
+    }
+
     public void close() {
         try {
             conn.close();

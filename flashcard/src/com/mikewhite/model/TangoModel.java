@@ -1,11 +1,20 @@
 package com.mikewhite.model;
 
 public class TangoModel {
+    private int id;
     private String dictionaryForm;
     private String masuForm;
     private String teForm;
     private String kanji;
     private String meaning;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getDictionaryForm() {
         return dictionaryForm;

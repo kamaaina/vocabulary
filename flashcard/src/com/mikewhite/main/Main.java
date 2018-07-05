@@ -8,7 +8,7 @@ public class Main {
     public Main() {
         JFrame frame = new JFrame("Flashcard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new FlashcardPanel());
+        frame.getContentPane().add(new FlashcardPanel(frame));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
