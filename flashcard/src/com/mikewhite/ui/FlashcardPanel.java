@@ -8,10 +8,12 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.mikewhite.controller.FlashcardController;
@@ -24,18 +26,22 @@ public class FlashcardPanel extends JPanel {
     private JFrame frame;
     private JTextField txtField;
     private JTextField meaningTxt;
-    private JButton dictBtn;
-    private JButton masuBtn;
-    private JButton teBtn;
+    private JButton hiraganaBtn;
     private JButton kanjiBtn;
+    private JButton englishBtn;
     private JButton nextBtn;
     private JButton addBtn;
     private JButton deleteBtn;
+    private JRadioButton hiraganaRdo;
+    private JRadioButton kanjiRdo;
+    private JRadioButton meaningRdo;
     private FlashcardController controller;
     private TangoModel tangoModel;
+    private int mode;
 
     public FlashcardPanel(JFrame frame) {
         this.frame = frame;
+        mode = 3;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         controller = new FlashcardController(this);
@@ -60,39 +66,18 @@ public class FlashcardPanel extends JPanel {
         font = new Font("Calbri", Font.BOLD, 14);
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
-        dictBtn = new JButton("Dictionary Form");
-        dictBtn.setFont(font);
-        dictBtn.setEnabled(false);
-        dictBtn.addActionListener(new ActionListener() {
+        hiraganaBtn = new JButton("ひらがな");
+        hiraganaBtn.setFont(font);
+        hiraganaBtn.setEnabled(false);
+        hiraganaBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                txtField.setText(tangoModel.getDictionaryForm());
+                txtField.setText(tangoModel.getHiragana());
             }
 
         });
-        masuBtn = new JButton("ます Form");
-        masuBtn.setFont(font);
-        masuBtn.setEnabled(false);
-        masuBtn.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                txtField.setText(tangoModel.getMasuForm());
-            }
-
-        });
-        teBtn = new JButton("て Form");
-        teBtn.setFont(font);
-        teBtn.setEnabled(false);
-        teBtn.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                txtField.setText(tangoModel.getTeForm());
-            }
-
-        });
         kanjiBtn = new JButton("かんじ");
         kanjiBtn.setFont(font);
         kanjiBtn.setEnabled(false);
@@ -104,10 +89,21 @@ public class FlashcardPanel extends JPanel {
             }
 
         });
-        panel.add(dictBtn);
-        panel.add(masuBtn);
-        panel.add(teBtn);
+
+        englishBtn = new JButton("英語");
+        englishBtn.setFont(font);
+        englishBtn.setEnabled(false);
+        englishBtn.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                meaningTxt.setText(tangoModel.getMeaning());
+            }
+
+        });
+        panel.add(hiraganaBtn);
         panel.add(kanjiBtn);
+        panel.add(englishBtn);
         add(panel, gbc);
 
         gbc.gridy = 3;
@@ -117,8 +113,9 @@ public class FlashcardPanel extends JPanel {
         nextBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                loadVocabulary(controller.next());
+                meaningTxt.setText("");
                 txtField.setText("");
+                loadVocabulary(controller.next());
             }
         });
         panel.add(nextBtn);
@@ -154,14 +151,56 @@ public class FlashcardPanel extends JPanel {
         panel.add(deleteBtn);
 
         add(panel, gbc);
+
+        gbc.gridy = 4;
+        panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        hiraganaRdo = new JRadioButton("ひらがな");
+        hiraganaRdo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                mode = 1;
+            }
+        });
+        kanjiRdo = new JRadioButton("かんじ");
+        kanjiRdo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                mode = 2;
+            }
+        });
+        meaningRdo = new JRadioButton("英語");
+        meaningRdo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                mode = 3;
+            }
+        });
+        meaningRdo.setSelected(true);
+        ButtonGroup group = new ButtonGroup();
+        group.add(hiraganaRdo);
+        group.add(kanjiRdo);
+        group.add(meaningRdo);
+        panel.add(hiraganaRdo);
+        panel.add(kanjiRdo);
+        panel.add(meaningRdo);
+        add(panel, gbc);
     }
 
     private void loadVocabulary(TangoModel tm) {
         tangoModel = tm;
-        meaningTxt.setText(tangoModel.getMeaning());
-        dictBtn.setEnabled(tangoModel.getDictionaryForm() != null);
-        masuBtn.setEnabled(tangoModel.getMasuForm() != null);
-        teBtn.setEnabled(tangoModel.getTeForm() != null);
-        kanjiBtn.setEnabled(tangoModel.getKanji() != null);
+        if (mode == 3) { // english
+            meaningTxt.setText(tangoModel.getMeaning());
+            hiraganaBtn.setEnabled(tangoModel.getHiragana() != null && tangoModel.getHiragana().length() > 0);
+            kanjiBtn.setEnabled(tangoModel.getKanji() != null && tangoModel.getKanji().length() > 0);
+        } else if (mode == 2) { // kanji
+            englishBtn.setEnabled(true);
+            hiraganaBtn.setEnabled(tangoModel.getHiragana() != null && tangoModel.getHiragana().length() > 0);
+            txtField.setText(tangoModel.getKanji());
+        } else { // hiragana
+            englishBtn.setEnabled(true);
+            txtField.setText(tangoModel.getHiragana());
+            kanjiBtn.setEnabled(tangoModel.getKanji() != null && tangoModel.getKanji().length() > 0);
+        }
     }
 }

@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -21,7 +20,6 @@ public class DeleteTango extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    // private final String QUERY = "SELECT id,masu,meaning from vocab";
     private final String DELETE_VOCAB = "DELETE from vocab where id=%d";
 
     private JTable tangoTable;
@@ -30,7 +28,7 @@ public class DeleteTango extends JPanel {
     private List<TangoModel> tangoList;
     private JButton deleteBtn;
 
-    private final Object[] COLUMNS = { "Id", "Meaning", "ます Form" };
+    private final Object[] COLUMNS = { "Id", "英語", "日本語" };
 
     public DeleteTango(List<TangoModel> tangoList) {
         this.tangoList = tangoList;
@@ -58,7 +56,7 @@ public class DeleteTango extends JPanel {
             Object rowData[] = new Object[3];
             rowData[0] = tm.getId();
             rowData[1] = tm.getMeaning();
-            rowData[2] = tm.getMasuForm();
+            rowData[2] = tm.getHiragana();
             tableModel.addRow(rowData);
         }
         scrollPane = new JScrollPane(tangoTable);

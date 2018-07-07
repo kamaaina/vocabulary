@@ -2,9 +2,7 @@ package com.mikewhite.model;
 
 public class TangoModel {
     private int id;
-    private String dictionaryForm;
-    private String masuForm;
-    private String teForm;
+    private String hiragana;
     private String kanji;
     private String meaning;
 
@@ -16,28 +14,12 @@ public class TangoModel {
         this.id = id;
     }
 
-    public String getDictionaryForm() {
-        return dictionaryForm;
+    public String getHiragana() {
+        return hiragana;
     }
 
-    public void setDictionaryForm(String dictionaryForm) {
-        this.dictionaryForm = dictionaryForm;
-    }
-
-    public String getMasuForm() {
-        return masuForm;
-    }
-
-    public void setMasuForm(String masuForm) {
-        this.masuForm = masuForm;
-    }
-
-    public String getTeForm() {
-        return teForm;
-    }
-
-    public void setTeForm(String teForm) {
-        this.teForm = teForm;
+    public void setHiragana(String hiragana) {
+        this.hiragana = hiragana;
     }
 
     public String getKanji() {

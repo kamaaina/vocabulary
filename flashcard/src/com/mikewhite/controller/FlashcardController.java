@@ -23,7 +23,7 @@ public class FlashcardController {
         this.panel = panel;
         models = new ArrayList<>();
         dbmgr = DatabaseManager.getInstance();
-        if (!dbmgr.connect("localhost", "test", "test"))
+        if (!dbmgr.connect("localhost", "mike", "mike"))
             JOptionPane.showMessageDialog(null, "Unable to connect to database");
         init();
     }
@@ -32,15 +32,13 @@ public class FlashcardController {
         models.clear();
 
         try {
-            ResultSet rs = dbmgr.fetch("select id,dictionary,masu,te,kanji,meaning from vocab");
+            ResultSet rs = dbmgr.fetch("select id,hiragana,kanji,meaning from vocab");
             while (rs.next()) {
                 TangoModel tm = new TangoModel();
                 tm.setId(rs.getInt(1));
-                tm.setDictionaryForm(rs.getString(2));
-                tm.setMasuForm(rs.getString(3));
-                tm.setTeForm(rs.getString(4));
-                tm.setKanji(rs.getString(5));
-                tm.setMeaning(rs.getString(6));
+                tm.setHiragana(rs.getString(2));
+                tm.setKanji(rs.getString(3));
+                tm.setMeaning(rs.getString(4));
                 models.add(tm);
             }
         } catch (SQLException sqle) {

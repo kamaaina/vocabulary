@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseManager {
-    private static final String CONNECTION_STR = "jdbc:mysql://%s:3306/vocab?characterEncoding=UTF-8&user=%s&password=%s";
+    private static final String CONNECTION_STR = "jdbc:mysql://%s:3306/vocabulary?characterEncoding=UTF-8&user=%s&password=%s";
 
     private Connection conn;
     private Statement stmt;
